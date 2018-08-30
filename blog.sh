@@ -37,10 +37,11 @@ invalid_args(){
 
 
 post_add(){
+    echo "Inside post_add fun, args= $@\n"
     category_id=$(sqlite3 $BLOG_DB "SELECT id FROM category WHERE category = '$3';")
+    printf "CAT ID= $category_id\n"
     sqlite3 $BLOG_DB "INSERT INTO posts (title, content,category) VALUES('$1', '$2', '$category_id');"
     printf "Post added Successfully!\n"
-
 
 }
 
@@ -66,12 +67,9 @@ elif [ $1 == "post" ]; then
 
     case $1 in
         add)
-            printf "adding post!\n"
-            if [ $# == 3 ]; then
+            if [ $# -ge 3 ]; then
                 printf "Adding post\n"
-
-                elif [ $# -gt 3 ]; then
-                printf "Adding post with category\n"
+                post_add $2 $3 $5
 
                 else
                     printf "in post, default\n"
