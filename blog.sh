@@ -86,7 +86,7 @@ elif [ $1 == "post" ]; then
 
         *)
 #                default case
-            printf "Sorry, I don't understand\n"
+            invalid_args
             ;;
     esac
 
@@ -116,7 +116,7 @@ elif [ $1 == "category" ]; then
 
         *)
 #                default case
-            printf "Sorry, I don't understand\n"
+            invalid_args
             ;;
     esac
 
