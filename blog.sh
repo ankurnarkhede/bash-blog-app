@@ -7,32 +7,32 @@ BLOG_DB="./blog.db"
 print_help(){
     printf "\n"
     printf "Post Commands:\n"
-    printf "\t%-10s : %s\n" "Usage" "$ sh blog.sh post [Command] [arguments]"
+    printf "\t%-10s : %s\n" "Usage" "$ bash blog.sh post [Command] [arguments]"
 
     printf "\n\t%-10s : %s\n" "add" "Create Post"
-    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh post add \"title\" \"content\" --category \"category_name\""
-    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh post add \"title\" \"content\""
+    printf "\t%-10s : %s\n" "Usage:" "$ bash blog.sh post add \"title\" \"content\" --category \"category_name\""
+    printf "\t%-10s : %s\n" "Usage:" "$ bash blog.sh post add \"title\" \"content\""
 
     printf "\n\t%-10s : %s\n" "list" "List all Posts"
-    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh post list"
+    printf "\t%-10s : %s\n" "Usage:" "$ bash blog.sh post list"
 
 
     printf "\n\t%-10s : %s\n" "search" "Search a for a post"
-    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh post search \"text\""
+    printf "\t%-10s : %s\n" "Usage:" "$ bash blog.sh post search \"text\""
 
 
 #    category commands
     printf "\n\nCategory Commands:\n"
-    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh category [Command] [arguments]"
+    printf "\t%-10s : %s\n" "Usage:" "$ bash blog.sh category [Command] [arguments]"
 
     printf "\n\t%-10s : %s\n" "list" "List all Categories"
-    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh category list"
+    printf "\t%-10s : %s\n" "Usage:" "$ bash blog.sh category list"
 
     printf "\n\t%-10s : %s\n" "assign" "Assign a category to a post"
-    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh category assign <post-id> <cat-id>"
+    printf "\t%-10s : %s\n" "Usage:" "$ bash blog.sh category assign <post-id> <cat-id>"
 
     printf "\n\t%-10s : %s\n" "add" "Add a category"
-    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh category add \"category_name\""
+    printf "\t%-10s : %s\n" "Usage:" "$ bash blog.sh category add \"category_name\""
 
     printf "\n\n"
 
@@ -40,22 +40,25 @@ print_help(){
 }
 
 invalid_args(){
-    printf "INVALID arguments passed\nPass --help for help\n"
+    printf "INVALID arguments passed\nUse 'bash blog.sh --help' for help\n"
 
 }
 
 #post functions
 post_add(){
-    echo "Inside post_add fun, args= $@\n"
-    category_id=$(sqlite3 $BLOG_DB "SELECT id FROM category WHERE category = '$3';")
 
-    if [ -z "$category_id" ]; then
-        printf "category empty\n"
-        category_add $3
+    if [ "$3" ]; then
         category_id=$(sqlite3 $BLOG_DB "SELECT id FROM category WHERE category = '$3';")
+
+        if [ -z "$category_id" ]; then
+            category_add $3
+
+        fi
     fi
 
-    printf "CAT ID= $category_id\n"
+
+
+    category_id=$(sqlite3 $BLOG_DB "SELECT id FROM category WHERE category = '$3';")
     sqlite3 $BLOG_DB "INSERT INTO posts (title, content,category) VALUES('$1', '$2', '$category_id');"
     printf "Post added Successfully!\n"
 
@@ -150,12 +153,11 @@ if [[ $1 == "--help" ]]; then
 
 elif [[ $1 == "post" ]]; then
     shift
-    printf "$1 $2 $3\n"
 
     case $1 in
         add)
             if [ $# -ge 3 ]; then
-                post_add $2 $3 $5
+                post_add "$2" "$3" "$5"
 
                 else
                     invalid_args
@@ -167,7 +169,7 @@ elif [[ $1 == "post" ]]; then
             ;;
 
         search)
-            post_search $2
+            post_search "$2"
             ;;
 
         *)
@@ -182,7 +184,7 @@ elif [[ $1 == "category" ]]; then
 
     case $1 in
         add)
-            category_add $2
+            category_add "$2"
             ;;
 
         list)
@@ -190,7 +192,7 @@ elif [[ $1 == "category" ]]; then
             ;;
 
         assign)
-            category_assign_to_post $2 $3
+            category_assign_to_post "$2" "$3"
             ;;
 
         *)
