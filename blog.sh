@@ -14,7 +14,7 @@
 #    blog.sh category list will list all current categories
 #    blog.sh category assign <post-id> <cat-id> will assign the specified category to a post
 
-
+source functions.sh
 BLOG_DB="./blog.db"
 
 print_help(){
@@ -108,13 +108,11 @@ category_add(){
 
 category_list(){
     printf "Listing all Categories:\n"
-    sqlite3 blog.db "SELECT id,category FROM category;"> output.txt
+    printf "Id|Category\n"> output.txt
+    sqlite3 blog.db "SELECT id,category FROM category;">> output.txt
 
 
-    while IFS='|' read val1 val2 ;do
-        printf "\t $val1. $val2\n"
-
-    done < output.txt
+    printTable '|' "$(cat output.txt)"
 
 }
 
@@ -135,13 +133,14 @@ category_assign_to_post(){
 #printing name of application
 if [ $# == 0 ]; then
     printf "Bash Blogging App\n"
+    exit 0
 fi
 
 #reading the args
-if [ $1 == "--help" ]; then
+if [[ $1 == "--help" ]]; then
     print_help
 
-elif [ $1 == "post" ]; then
+elif [[ $1 == "post" ]]; then
     shift
     printf "$1 $2 $3\n"
 
@@ -170,7 +169,7 @@ elif [ $1 == "post" ]; then
     esac
 
 
-elif [ $1 == "category" ]; then
+elif [[ $1 == "category" ]]; then
     shift
 
     case $1 in
