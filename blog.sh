@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
+#contains table printing functions
 source functions.sh
+
+#database link
 BLOG_DB="./blog.db"
 
 
 print_help(){
+#    printing help
+
     printf "\n"
     printf "Post Commands:\n"
     printf "\t%-10s : %s\n" "Usage" "$ bash blog.sh post [Command] [arguments]"
@@ -40,12 +45,14 @@ print_help(){
 }
 
 invalid_args(){
+#    if args passed are invalid
     printf "INVALID arguments passed\nUse 'bash blog.sh --help' for help\n"
 
 }
 
 #post functions
 post_add(){
+#    add post as blank category, create and add if specified
 
     if [ "$3" ]; then
         category_id=$(sqlite3 $BLOG_DB "SELECT id FROM category WHERE category = '$3';")
@@ -56,8 +63,6 @@ post_add(){
         fi
     fi
 
-
-
     category_id=$(sqlite3 $BLOG_DB "SELECT id FROM category WHERE category = '$3';")
     sqlite3 $BLOG_DB "INSERT INTO posts (title, content,category) VALUES('$1', '$2', '$category_id');"
     printf "Post added Successfully!\n"
@@ -65,8 +70,8 @@ post_add(){
 }
 
 post_list(){
-    printf "Listing all posts\n"
-    sqlite3 blog.db "SELECT p.id,p.title, p.content, c.category FROM posts as p LEFT OUTER JOIN category as c ON p.category=c.id;"> output.txt
+    printf "Listing all posts:\n"
+    sqlite3 $BLOG_DB "SELECT p.id,p.title, p.content, c.category FROM posts as p LEFT OUTER JOIN category as c ON p.category=c.id;"> output.txt
 
 
     while IFS='|' read val1 val2 val3 val4 ;do
@@ -86,8 +91,10 @@ post_list(){
 }
 
 post_search(){
+#    searching for given keyword in title and content
+
     printf "Search results for '$1':\n"
-    sqlite3 blog.db "SELECT p.id,p.title, p.content, c.category FROM posts as p
+    sqlite3 $BLOG_DB "SELECT p.id,p.title, p.content, c.category FROM posts as p
                         LEFT OUTER JOIN category as c ON p.category=c.id
                         WHERE p.title LIKE '%$1%' OR p.content LIKE '%$1%';"> output.txt
 
@@ -118,17 +125,31 @@ category_add(){
 }
 
 category_list(){
+
     printf "Listing all Categories:\n"
     printf "Id|Category\n"> output.txt
-    sqlite3 blog.db "SELECT id,category FROM category;">> output.txt
-
+    sqlite3 $BLOG_DB "SELECT id,category FROM category;">> output.txt
 
     printTable '|' "$(cat output.txt)"
 
 }
 
 category_assign_to_post(){
-    sqlite3 blog.db "UPDATE posts SET category='$2' WHERE id='$1';"
+#    assigning a category_id to specified post_id
+
+    post_count=$(sqlite3 $BLOG_DB "SELECT count(*) FROM posts WHERE id = '$1';")
+    category_count=$(sqlite3 $BLOG_DB "SELECT count(*) FROM category WHERE id = '$2';")
+
+    post_count=0
+    category_count=0
+
+    if [ $post_count -eq 0 -o $category_count -eq 0 ]; then
+
+        printf "Please enter proper post_id and category_id\n"
+        exit 0
+    fi
+
+    sqlite3 $BLOG_DB "UPDATE posts SET category='$2' WHERE id='$1';"
 
     category=$(sqlite3 $BLOG_DB "SELECT category FROM category WHERE id = '$2';")
     post_title=$(sqlite3 $BLOG_DB "SELECT title FROM posts WHERE id = '$1';")
@@ -152,6 +173,7 @@ if [[ $1 == "--help" ]]; then
     print_help
 
 elif [[ $1 == "post" ]]; then
+#    post operations
     shift
 
     case $1 in
@@ -180,6 +202,7 @@ elif [[ $1 == "post" ]]; then
 
 
 elif [[ $1 == "category" ]]; then
+    #category operations
     shift
 
     case $1 in
