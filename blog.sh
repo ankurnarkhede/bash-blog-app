@@ -3,34 +3,39 @@
 source functions.sh
 BLOG_DB="./blog.db"
 
-#task
-
-#    blog.sh will return the name of your application
-#    blog.sh --help will list help text and commands available
-
-#    blog.sh post add "title" "content" will add a new blog a new blog post with the specified title and content
-#    blog.sh post add "title" "content" --category "cat-name" will add a new blog post with the specified title, content and assign a category to it. If the category doesn’t exist, it will first be created.
-#    blog.sh post list will list all blog posts
-#    blog.sh post search "keyword" will list all blog posts where “keyword” is found in the title and/or content
-
-#    blog.sh category add "category-name" will create a new category
-#    blog.sh category list will list all current categories
-#    blog.sh category assign <post-id> <cat-id> will assign the specified category to a post
 
 print_help(){
+    printf "\n"
+    printf "Post Commands:\n"
+    printf "\t%-10s : %s\n" "Usage" "$ sh blog.sh post [Command] [arguments]"
+
+    printf "\n\t%-10s : %s\n" "add" "Create Post"
+    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh post add \"title\" \"content\" --category \"category_name\""
+    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh post add \"title\" \"content\""
+
+    printf "\n\t%-10s : %s\n" "list" "List all Posts"
+    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh post list"
 
 
+    printf "\n\t%-10s : %s\n" "search" "Search a for a post"
+    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh post search \"text\""
 
 
-#    printf "blog.sh will return the name of your application\n"
-#    printf "blog.sh --help will list help text and commands available\n"
-#    printf "blog.sh post add "title" "content" will add a new blog a new blog post with the specified title and content\n"
-#    printf "blog.sh post add "title" "content" --category "cat-name" will add a new blog post with the specified title, content and assign a category to it. If the category doesn’t exist, it will first be created.\n"
-#    printf "blog.sh post list will list all blog posts\n"
-#    printf "blog.sh post search "keyword" will list all blog posts where “keyword” is found in the title and/or content\n"
-#    printf "blog.sh category add "category-name" will create a new category\n"
-#    printf "blog.sh category list will list all current categories\n"
-#    printf "blog.sh category assign <post-id> <cat-id> will assign the specified category to a post\n"
+#    category commands
+    printf "\n\nCategory Commands:\n"
+    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh category [Command] [arguments]"
+
+    printf "\n\t%-10s : %s\n" "list" "List all Categories"
+    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh category list"
+
+    printf "\n\t%-10s : %s\n" "assign" "Assign a category to a post"
+    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh category assign <post-id> <cat-id>"
+
+    printf "\n\t%-10s : %s\n" "add" "Add a category"
+    printf "\t%-10s : %s\n" "Usage:" "$ sh blog.sh category add \"category_name\""
+
+    printf "\n\n"
+
 
 }
 
