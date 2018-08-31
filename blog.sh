@@ -54,6 +54,46 @@ post_add(){
 }
 
 post_list(){
+    printf "Listing all posts\n"
+    sqlite3 blog.db "SELECT p.id,p.title, p.content, c.category FROM posts as p LEFT OUTER JOIN category as c ON p.category=c.id;"> output.txt
+
+
+    while IFS='|' read val1 val2 val3 val4 ;do
+
+        if [ -z "$val4" ]; then
+            val4="null"
+        fi
+
+        printf "\t%-10s : %s\n" "Id" $val1
+        printf "\t%-10s : %s\n" "Title" $val2
+        printf "\t%-10s : %s\n" "Content" $val3
+        printf "\t%-10s : %s\n" "Category" $val4
+        printf "=======================================\n"
+
+    done < output.txt
+
+}
+
+post_search(){
+    printf "Search results for '$1':\n"
+    sqlite3 blog.db "SELECT p.id,p.title, p.content, c.category FROM posts as p
+                        LEFT OUTER JOIN category as c ON p.category=c.id
+                        WHERE p.title LIKE '%$1%' OR p.content LIKE '%$1%';"> output.txt
+
+
+    while IFS='|' read val1 val2 val3 val4 ;do
+
+        if [ -z "$val4" ]; then
+            val4="null"
+        fi
+
+        printf "\t%-10s : %s\n" "Id" $val1
+        printf "\t%-10s : %s\n" "Title" $val2
+        printf "\t%-10s : %s\n" "Content" $val3
+        printf "\t%-10s : %s\n" "Category" $val4
+        printf "=======================================\n"
+
+    done < output.txt
 
 
 }
@@ -62,6 +102,30 @@ post_list(){
 category_add(){
     sqlite3 $BLOG_DB "INSERT into category (category)VALUES ('$1');"
     printf "Category $1 added successfully!\n"
+
+
+}
+
+category_list(){
+    printf "Listing all Categories:\n"
+    sqlite3 blog.db "SELECT id,category FROM category;"> output.txt
+
+
+    while IFS='|' read val1 val2 ;do
+        printf "\t $val1. $val2\n"
+
+    done < output.txt
+
+}
+
+category_assign_to_post(){
+    sqlite3 blog.db "UPDATE posts SET category='$2' WHERE id='$1';"
+
+    category=$(sqlite3 $BLOG_DB "SELECT category FROM category WHERE id = '$2';")
+    post_title=$(sqlite3 $BLOG_DB "SELECT title FROM posts WHERE id = '$1';")
+
+    printf "Category '$category' assigned to post '$post_title'\n"
+
 
 }
 
@@ -98,10 +162,12 @@ elif [ $1 == "post" ]; then
 
         list)
             printf "in list!\n"
+            post_list
             ;;
 
         search)
             printf "in search!\n"
+            post_search $2
             ;;
 
         *)
@@ -117,21 +183,17 @@ elif [ $1 == "category" ]; then
 
     case $1 in
         add)
-            printf "adding category!\n"
-            if [ $# == 3 ]; then
-                printf "Adding category\n"
-
-                else
-                    printf "in post, default\n"
-            fi
+            category_add $2
             ;;
 
         list)
             printf "in list!\n"
+            category_list
             ;;
 
         assign)
             printf "in assign!\n"
+            category_assign_to_post $2 $3
             ;;
 
         *)
