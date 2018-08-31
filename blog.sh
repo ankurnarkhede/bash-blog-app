@@ -130,55 +130,47 @@ category_assign_to_post(){
 }
 
 
-printf "$#\n"
+#main program
 
-#    blog.sh will return the name of your application
+#printing name of application
 if [ $# == 0 ]; then
     printf "Bash Blogging App\n"
 fi
 
-
 #reading the args
-
 if [ $1 == "--help" ]; then
-    printf "=============PRINTING HELP DESCRIPTION==============\n"
     print_help
 
 elif [ $1 == "post" ]; then
-    printf "Inside POST\n"
     shift
     printf "$1 $2 $3\n"
 
     case $1 in
         add)
             if [ $# -ge 3 ]; then
-                printf "Adding post\n"
                 post_add $2 $3 $5
 
                 else
-                    printf "in post, default\n"
+                    invalid_args
             fi
             ;;
 
         list)
-            printf "in list!\n"
             post_list
             ;;
 
         search)
-            printf "in search!\n"
             post_search $2
             ;;
 
         *)
-#                default case
+#           default case
             invalid_args
             ;;
     esac
 
 
 elif [ $1 == "category" ]; then
-    printf "Inside CATEGORY\n"
     shift
 
     case $1 in
@@ -187,22 +179,18 @@ elif [ $1 == "category" ]; then
             ;;
 
         list)
-            printf "in list!\n"
             category_list
             ;;
 
         assign)
-            printf "in assign!\n"
             category_assign_to_post $2 $3
             ;;
 
         *)
-#                default case
+#           default case
             invalid_args
             ;;
     esac
-
-
 
 else
    invalid_args
