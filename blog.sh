@@ -14,6 +14,7 @@
 #    blog.sh category list will list all current categories
 #    blog.sh category assign <post-id> <cat-id> will assign the specified category to a post
 
+
 BLOG_DB="./blog.db"
 
 print_help(){
@@ -35,13 +36,32 @@ invalid_args(){
 
 }
 
-
+#post functions
 post_add(){
     echo "Inside post_add fun, args= $@\n"
     category_id=$(sqlite3 $BLOG_DB "SELECT id FROM category WHERE category = '$3';")
+
+    if [ -z "$category_id" ]; then
+        printf "category empty\n"
+        category_add $3
+        category_id=$(sqlite3 $BLOG_DB "SELECT id FROM category WHERE category = '$3';")
+    fi
+
     printf "CAT ID= $category_id\n"
     sqlite3 $BLOG_DB "INSERT INTO posts (title, content,category) VALUES('$1', '$2', '$category_id');"
     printf "Post added Successfully!\n"
+
+}
+
+post_list(){
+
+
+}
+
+#category functions
+category_add(){
+    sqlite3 $BLOG_DB "INSERT into category (category)VALUES ('$1');"
+    printf "Category $1 added successfully!\n"
 
 }
 
@@ -57,7 +77,7 @@ fi
 #reading the args
 
 if [ $1 == "--help" ]; then
-    printf "===========PRINTING HELP DESCRIPTION==============\n"
+    printf "=============PRINTING HELP DESCRIPTION==============\n"
     print_help
 
 elif [ $1 == "post" ]; then
@@ -123,6 +143,6 @@ elif [ $1 == "category" ]; then
 
 
 else
-   echo "None of the condition met"
+   invalid_args
 fi
 
