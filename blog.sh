@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source functions.sh
+BLOG_DB="./blog.db"
+
 #task
 
 #    blog.sh will return the name of your application
@@ -14,20 +17,20 @@
 #    blog.sh category list will list all current categories
 #    blog.sh category assign <post-id> <cat-id> will assign the specified category to a post
 
-source functions.sh
-BLOG_DB="./blog.db"
-
 print_help(){
 
-    printf "blog.sh will return the name of your application\n"
-    printf "blog.sh --help will list help text and commands available\n"
-    printf "blog.sh post add "title" "content" will add a new blog a new blog post with the specified title and content\n"
-    printf "blog.sh post add "title" "content" --category "cat-name" will add a new blog post with the specified title, content and assign a category to it. If the category doesn’t exist, it will first be created.\n"
-    printf "blog.sh post list will list all blog posts\n"
-    printf "blog.sh post search "keyword" will list all blog posts where “keyword” is found in the title and/or content\n"
-    printf "blog.sh category add "category-name" will create a new category\n"
-    printf "blog.sh category list will list all current categories\n"
-    printf "blog.sh category assign <post-id> <cat-id> will assign the specified category to a post\n"
+
+
+
+#    printf "blog.sh will return the name of your application\n"
+#    printf "blog.sh --help will list help text and commands available\n"
+#    printf "blog.sh post add "title" "content" will add a new blog a new blog post with the specified title and content\n"
+#    printf "blog.sh post add "title" "content" --category "cat-name" will add a new blog post with the specified title, content and assign a category to it. If the category doesn’t exist, it will first be created.\n"
+#    printf "blog.sh post list will list all blog posts\n"
+#    printf "blog.sh post search "keyword" will list all blog posts where “keyword” is found in the title and/or content\n"
+#    printf "blog.sh category add "category-name" will create a new category\n"
+#    printf "blog.sh category list will list all current categories\n"
+#    printf "blog.sh category assign <post-id> <cat-id> will assign the specified category to a post\n"
 
 }
 
