@@ -4,7 +4,7 @@ A Command Line Interface for blog written in Bash
 
 **Getting Started**
 
-###Posts
+### Posts
 Add Post
 ```
 $ bash blog.sh post add "title" "content" --category "category"
@@ -21,7 +21,7 @@ $ bash blog.sh post search "keyword"
 ```
 
 
-###Categories
+### Categories
 Add a Category
 ```
 $ bash blog.sh category add "category_name"
