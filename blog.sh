@@ -78,10 +78,10 @@ function post_list(){
             val4="null"
         fi
 
-        printf "\t%-10s : %s\n" "Id" $val1
-        printf "\t%-10s : %s\n" "Title" $val2
-        printf "\t%-10s : %s\n" "Content" $val3
-        printf "\t%-10s : %s\n" "Category" $val4
+        printf "\t%-10s : %s\n" "Id" "$val1"
+        printf "\t%-10s : %s\n" "Title" "$val2"
+        printf "\t%-10s : %s\n" "Content" "$val3"
+        printf "\t%-10s : %s\n" "Category" "$val4"
         printf "=======================================\n"
 
     done < output.txt
