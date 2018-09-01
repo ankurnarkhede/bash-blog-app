@@ -7,7 +7,7 @@ source functions.sh
 BLOG_DB="./blog.db"
 
 
-print_help(){
+function print_help(){
 #    printing help
 
     printf "\n"
@@ -41,17 +41,16 @@ print_help(){
 
     printf "\n\n"
 
-
 }
 
-invalid_args(){
+function invalid_args(){
 #    if args passed are invalid
     printf "INVALID arguments passed\nUse 'bash blog.sh --help' for help\n"
 
 }
 
 #post functions
-post_add(){
+function post_add(){
 #    add post as blank category, create and add if specified
 
     if [ "$3" ]; then
@@ -69,10 +68,9 @@ post_add(){
 
 }
 
-post_list(){
+function post_list(){
     printf "Listing all posts:\n"
     sqlite3 $BLOG_DB "SELECT p.id,p.title, p.content, c.category FROM posts as p LEFT OUTER JOIN category as c ON p.category=c.id;"> output.txt
-
 
     while IFS='|' read val1 val2 val3 val4 ;do
 
@@ -90,7 +88,7 @@ post_list(){
 
 }
 
-post_search(){
+function post_search(){
 #    searching for given keyword in title and content
 
     printf "Search results for '$1':\n"
@@ -98,7 +96,6 @@ post_search(){
                         LEFT OUTER JOIN category as c ON p.category=c.id
                         WHERE p.title LIKE '%$1%' OR p.content LIKE '%$1%';"> output.txt
 
-
     while IFS='|' read val1 val2 val3 val4 ;do
 
         if [ -z "$val4" ]; then
@@ -113,18 +110,16 @@ post_search(){
 
     done < output.txt
 
-
 }
 
 #category functions
-category_add(){
+function category_add(){
     sqlite3 $BLOG_DB "INSERT into category (category)VALUES ('$1');"
     printf "Category $1 added successfully!\n"
 
-
 }
 
-category_list(){
+function category_list(){
 
     printf "Listing all Categories:\n"
     printf "Id|Category\n"> output.txt
@@ -134,7 +129,7 @@ category_list(){
 
 }
 
-category_assign_to_post(){
+function category_assign_to_post(){
 #    assigning a category_id to specified post_id
 
     post_count=$(sqlite3 $BLOG_DB "SELECT count(*) FROM posts WHERE id = '$1';")
@@ -156,9 +151,7 @@ category_assign_to_post(){
 
     printf "Category '$category' assigned to post '$post_title'\n"
 
-
 }
-
 
 #main program
 
